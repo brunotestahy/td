@@ -3,6 +3,7 @@
     <path id="border" transform="translate(125, 125)"/>
     <path id="loader" transform="translate(125, 125) scale(.84)"/>
   </svg>
-  <button (click)="play()">Play</button>
-  <button (click)="pause()">Pause</button>
+  <button class="button-play"
+          [class.paused]="!isStopped"
+          (click)="toggleExecution()"></button>
 </div>

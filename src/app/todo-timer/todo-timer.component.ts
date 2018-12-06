@@ -10,6 +10,7 @@ import { scan, switchMap } from 'rxjs/operators';
 export class TodoTimerComponent implements OnInit {
   private start$ = new Subject();
   private stop$ = new Subject();
+  public isStopped = false;
 
   constructor() { }
 
@@ -17,12 +18,9 @@ export class TodoTimerComponent implements OnInit {
     this.buildTimer();
   }
 
-  public play() {
-    this.start$.next(false);
-  }
-
-  public pause() {
-    this.start$.next(true);
+  public toggleExecution() {
+    this.isStopped = !this.isStopped;
+    this.start$.next(this.isStopped);
   }
 
   private buildTimer(): void {
@@ -33,6 +31,6 @@ export class TodoTimerComponent implements OnInit {
       )
       .subscribe(console.log);
 
-    this.start$.next(false);
+    this.start$.next(this.isStopped);
   }
 }
