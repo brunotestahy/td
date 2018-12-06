@@ -1,0 +1,20 @@
+.todo-timer {
+  background-color: #787e7e;
+  min-height: 60px;
+  width: 50%;
+  margin: 0 auto;
+  display: flex;
+
+  svg {
+    display: block;
+    margin: 5px auto;
+  }
+
+  #loader {
+    fill: #0088cc;
+  }
+
+  #border {
+    fill: #00517a;
+  }
+}

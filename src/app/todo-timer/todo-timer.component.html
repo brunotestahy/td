@@ -1,3 +1,8 @@
-<p>
-  todo-timer works!
-</p>
+<div class="todo-timer">
+  <svg width="50" height="50" viewbox="0 0 250 250">
+    <path id="border" transform="translate(125, 125)"/>
+    <path id="loader" transform="translate(125, 125) scale(.84)"/>
+  </svg>
+  <button (click)="play()">Play</button>
+  <button (click)="pause()">Pause</button>
+</div>
