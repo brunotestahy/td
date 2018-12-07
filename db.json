@@ -3,7 +3,14 @@
     {
       "title": "my first task",
       "complete": false,
-      "id": 1
+      "id": 1,
+      "timeSpent": 6
+    },
+    {
+      "title": "Outro",
+      "complete": false,
+      "id": 2,
+      "timeSpent": 0
     }
   ]
 }

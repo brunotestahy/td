@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { concat, NEVER, Subject, timer } from 'rxjs';
 import { scan, switchMap } from 'rxjs/operators';
+import { Todo } from '../todo';
 
 @Component({
   selector: 'app-todo-timer',
@@ -12,8 +13,12 @@ export class TodoTimerComponent implements OnInit {
   private stop$ = new Subject();
   public isStopped = false;
   private MAX_TIME =  1200; // 30 minutes in seconds
-  borderD = '';
-  loaderD = '';
+  public borderD = '';
+  public loaderD = '';
+  public timeSpent = 0;
+
+  @Output()
+  updateTimeSpent: EventEmitter<number> = new EventEmitter();
 
   constructor() {
   }
@@ -23,6 +28,9 @@ export class TodoTimerComponent implements OnInit {
   }
 
   public toggleExecution() {
+    if (!this.isStopped) {
+      this.updateTimeSpent.emit(this.timeSpent);
+    }
     this.isStopped = !this.isStopped;
     this.start$.next(this.isStopped);
   }
@@ -30,7 +38,7 @@ export class TodoTimerComponent implements OnInit {
   private buildTimer(): void {
     concat(this.start$, this.stop$)
       .pipe(
-        switchMap(stopped => (stopped ? NEVER : timer(0, 100))),
+        switchMap(stopped => (stopped ? NEVER : timer(0, 1000))),
         scan(acc => acc - 1, this.MAX_TIME),
       )
       .subscribe(this.updateLoader.bind(this));
@@ -40,11 +48,12 @@ export class TodoTimerComponent implements OnInit {
 
   private updateLoader(currentValue: number) {
     currentValue = this.MAX_TIME - currentValue;
+    this.timeSpent = Math.round(currentValue / 60); // in Minutes
     const PI = Math.PI;
-    const totalSections = 360;
+    const totalSections = this.MAX_TIME;
     const semiSections = totalSections / 2;
-    console.log(currentValue);
 
+    console.log(currentValue);
     currentValue %= totalSections;
     const r = (currentValue * PI / semiSections);
     const x = Math.sin(r) * 125;
@@ -59,13 +68,5 @@ export class TodoTimerComponent implements OnInit {
 
     this.borderD = anim;
     this.loaderD = anim;
-
-    this.checkMaxTime(currentValue);
-  }
-
-  private checkMaxTime(seconds: number) {
-    if (seconds === this.MAX_TIME - 1) {
-      this.toggleExecution();
-    }
   }
 }

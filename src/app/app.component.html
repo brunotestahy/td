@@ -5,11 +5,9 @@
   <app-todo-list
     [todos]="todos"
     (toggleComplete)="onToggleTodoComplete($event)"
+    (updateTodo)="onUpdateTodo($event)"
     (remove)="onRemoveTodo($event)"
   ></app-todo-list>
-  <br>
-  <br>
-  <app-todo-timer></app-todo-timer>
   <app-todo-list-footer
     [todos]="todos"
   ></app-todo-list-footer>
