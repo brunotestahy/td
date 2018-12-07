@@ -1,24 +1,35 @@
 .todo-timer {
-  background-color: #787e7e;
-  min-height: 60px;
-  width: 50%;
+  height: 40px;
+  width: 10rem;
   margin: 0 auto;
   display: flex;
+  align-items: center;
 
-  svg {
+  &:hover .button-play {
     display: block;
-    margin: 5px auto;
   }
 
-  #loader {
-    fill: #0088cc;
-  }
+  .pie-wrapper {
+    transform: scale(.1);
 
-  #border {
-    fill: #00517a;
+    svg {
+      display: block;
+      margin: 5px auto;
+    }
+
+    #loader {
+      fill: #0088cc;
+    }
+
+    #border {
+      fill: #00517a;
+    }
   }
 
   .button-play {
+    display: none;
+    transform: scale(.3);
+    margin-left: -200px;
     border: 0;
     background: transparent;
     box-sizing: border-box;
