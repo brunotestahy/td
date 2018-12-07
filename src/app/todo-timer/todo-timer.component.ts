@@ -1,21 +1,22 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { concat, NEVER, Subject, timer } from 'rxjs';
-import { scan, switchMap } from 'rxjs/operators';
-import { Todo } from '../todo';
+import { scan, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo-timer',
   templateUrl: './todo-timer.component.html',
   styleUrls: ['./todo-timer.component.scss']
 })
-export class TodoTimerComponent implements OnInit {
-  private start$ = new Subject();
-  private stop$ = new Subject();
+export class TodoTimerComponent implements OnInit, OnDestroy {
   public isStopped = false;
-  private MAX_TIME =  1200; // 30 minutes in seconds
   public borderD = '';
   public loaderD = '';
   public timeSpent = 0;
+
+  private destroy$ = new Subject();
+  private start$ = new Subject();
+  private stop$ = new Subject();
+  private MAX_TIME =  1200; // 30 minutes in seconds
 
   @Output()
   updateTimeSpent: EventEmitter<number> = new EventEmitter();
@@ -23,8 +24,13 @@ export class TodoTimerComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.buildTimer();
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   public toggleExecution() {
@@ -40,6 +46,7 @@ export class TodoTimerComponent implements OnInit {
       .pipe(
         switchMap(stopped => (stopped ? NEVER : timer(0, 1000))),
         scan(acc => acc - 1, this.MAX_TIME),
+        takeUntil(this.destroy$)
       )
       .subscribe(this.updateLoader.bind(this));
 
@@ -53,7 +60,6 @@ export class TodoTimerComponent implements OnInit {
     const totalSections = this.MAX_TIME;
     const semiSections = totalSections / 2;
 
-    console.log(currentValue);
     currentValue %= totalSections;
     const r = (currentValue * PI / semiSections);
     const x = Math.sin(r) * 125;
